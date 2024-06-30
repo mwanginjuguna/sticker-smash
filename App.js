@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Button from "./components/Button";
 import ImageViewer from "./components/ImageViewer";
@@ -50,60 +51,65 @@ export default function App() {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                <ImageViewer
-                    placeholderImageSource={placeHolderImage}
-                    selectedImage={selectedImage}
-                />
+        <GestureHandlerRootView style={styles.container}>
+            <View style={styles.container}>
+                <View style={styles.imageContainer}>
+                    <ImageViewer
+                        placeholderImageSource={placeHolderImage}
+                        selectedImage={selectedImage}
+                    />
 
-                {pickedEmoji && (
-                    <EmojiSticker imageSize={24} stickerSource={pickedEmoji} />
-                )}
-            </View>
-
-            {showAppOptions ? (
-                <View style={styles.optionsContainer}>
-                    <View style={styles.optionsRow}>
-                        <IconButton
-                            icon="refresh"
-                            label="Reset"
-                            onPress={onReset}
+                    {pickedEmoji && (
+                        <EmojiSticker
+                            imageSize={24}
+                            stickerSource={pickedEmoji}
                         />
-                        <CircleButton onPress={onAddSticker} />
-                        <IconButton
-                            icon="save-alt"
-                            label="Save"
-                            onPress={onSaveImageAsync}
+                    )}
+                </View>
+
+                {showAppOptions ? (
+                    <View style={styles.optionsContainer}>
+                        <View style={styles.optionsRow}>
+                            <IconButton
+                                icon="refresh"
+                                label="Reset"
+                                onPress={onReset}
+                            />
+                            <CircleButton onPress={onAddSticker} />
+                            <IconButton
+                                icon="save-alt"
+                                label="Save"
+                                onPress={onSaveImageAsync}
+                            />
+                        </View>
+                    </View>
+                ) : (
+                    <View style={styles.footerContainer}>
+                        <Button
+                            theme="primary"
+                            label="Choose a Photo"
+                            onPress={pickImageAsync}
+                        />
+
+                        <Button
+                            label="Use Photo"
+                            onPress={() => {
+                                setShowAppOptions(true);
+                            }}
                         />
                     </View>
-                </View>
-            ) : (
-                <View style={styles.footerContainer}>
-                    <Button
-                        theme="primary"
-                        label="Choose a Photo"
-                        onPress={pickImageAsync}
+                )}
+
+                <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+                    <EmojiList
+                        onSelect={setPickedEmoji}
+                        onCloseModal={onModalClose}
                     />
+                </EmojiPicker>
 
-                    <Button
-                        label="Use Photo"
-                        onPress={() => {
-                            setShowAppOptions(true);
-                        }}
-                    />
-                </View>
-            )}
-
-            <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
-                <EmojiList
-                    onSelect={setPickedEmoji}
-                    onCloseModal={onModalClose}
-                />
-            </EmojiPicker>
-
-            <StatusBar style="auto" />
-        </View>
+                <StatusBar style="auto" />
+            </View>
+        </GestureHandlerRootView>
     );
 }
 
